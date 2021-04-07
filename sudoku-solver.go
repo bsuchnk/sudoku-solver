@@ -15,6 +15,13 @@ func main() {
 		if len(board[i]) != 9 {
 			log.Fatal("Wrong number of cells")
 		}
+		for j := range board[i] {
+			if '1' <= board[i][j] && board[i][j] <= '9' {
+				board[i][j] -= '0'
+			} else {
+				board[i][j] = 0
+			}
+		}
 	}
 
 	solveSudoku(board)
@@ -26,6 +33,9 @@ func solveSudoku(board [][]byte) {
 	if solved {
 		fmt.Printf("\nSolved:\n")
 		for _, boardRow := range board {
+			for i := range boardRow {
+				boardRow[i] += '0'
+			}
 			fmt.Println(string(boardRow))
 		}
 	} else {
@@ -40,23 +50,23 @@ func solve(b [][]byte, x, y int) bool {
 		return true
 	}
 
-	if b[x][y] != '.' {
+	if b[x][y] != 0 {
 		return solve(b, nX, nY)
 	}
 
 	sqx := (x / 3) * 3
 	sqy := (y / 3) * 3
 
-	var possible int16 = 1022
+	var possible int16 = 2<<10 - 2
 	for i := 0; i < 9; i++ {
-		if b[i][y] != '.' {
-			possible &= ^(1 << (b[i][y] - '0'))
+		if b[i][y] != 0 {
+			possible &= ^(1 << b[i][y])
 		}
-		if b[x][i] != '.' {
-			possible &= ^(1 << (b[x][i] - '0'))
+		if b[x][i] != 0 {
+			possible &= ^(1 << b[x][i])
 		}
-		if b[sqx+i/3][sqy+i%3] != '.' {
-			possible &= ^(1 << (b[sqx+i/3][sqy+i%3] - '0'))
+		if b[sqx+i/3][sqy+i%3] != 0 {
+			possible &= ^(1 << b[sqx+i/3][sqy+i%3])
 		}
 	}
 	if possible == 0 {
@@ -65,13 +75,13 @@ func solve(b [][]byte, x, y int) bool {
 
 	for i := byte(1); i <= 9; i++ {
 		if (possible & (1 << i)) > 0 {
-			b[x][y] = '0' + i
+			b[x][y] = i
 			if solve(b, nX, nY) {
 				return true
 			}
 		}
 	}
-	b[x][y] = '.'
+	b[x][y] = 0
 	return false
 }
 

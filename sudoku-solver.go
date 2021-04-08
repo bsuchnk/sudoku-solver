@@ -1,11 +1,17 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 )
 
+var printPretty bool
+
 func main() {
+	flag.BoolVar(&printPretty, "pretty", false, "prints formatted output")
+	flag.Parse()
+
 	board := make([][]byte, 9)
 	fmt.Println("Type in a sudoku board:")
 	for i := 0; i < 9; i++ {
@@ -31,15 +37,27 @@ func solveSudoku(board [][]byte) {
 	solved := solve(board, 0, 0)
 
 	if solved {
-		fmt.Printf("\nSolved:\n")
-		for _, boardRow := range board {
-			for i := range boardRow {
-				boardRow[i] += '0'
-			}
-			fmt.Println(string(boardRow))
-		}
+		printSudoku(board)
 	} else {
 		fmt.Printf("\nUnsolvable\n")
+	}
+}
+
+func printSudoku(board [][]byte) {
+	fmt.Printf("\nSolved:\n")
+	fmt.Println("+---+---+---+")
+	for i, boardRow := range board {
+		fmt.Print("|")
+		for j := range boardRow {
+			fmt.Print(boardRow[j])
+			if j%3 == 2 {
+				fmt.Print("|")
+			}
+		}
+		fmt.Println()
+		if i%3 == 2 {
+			fmt.Println("+---+---+---+")
+		}
 	}
 }
 

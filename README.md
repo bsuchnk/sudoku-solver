@@ -8,7 +8,14 @@ Simple program created using recursion with backtracking.
 
 ### Usage:
 Type in 9 rows with 9 characters each.
+
 1-9 are the numbers on the board.
-The dot is an empty cell.
+
+Any other character is an empty cell.
+
+flags:
+
+-pretty for formatted output
+
 
 The program will print out the solved sudoku if possible, otherwise it will print out an information about impossibility of the provided board.
